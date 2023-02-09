@@ -21,6 +21,18 @@
 #include "quantum/rgb_matrix/rgb_matrix.h"
 #endif  // RGB_MATRIX_ENABLE
 
+enum charybdis_keymap_layers {
+    LAYER_BASE = 0,
+    LAYER_LOWER,
+    LAYER_RAISE,
+	_MOUSE,
+};
+
+#define LOWER MO(LAYER_LOWER)
+#define RAISE MO(LAYER_RAISE)
+#define THREE MO(LAYER_THREE)
+#define MOUSE MO(_MOUSE)
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
   // Your macros ...
@@ -33,13 +45,6 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
-enum charybdis_keymap_layers {
-    LAYER_BASE = 0,
-    LAYER_LOWER,
-    LAYER_RAISE,
-	_MOUSE,
-};
-
 void matrix_scan_user(void) {
   achordion_task();
 }
@@ -50,73 +55,6 @@ uint16_t achordion_timeout(uint16_t tap_hold_keycode)
 }
  
 
-
-#define LOWER MO(LAYER_LOWER)
-#define RAISE MO(LAYER_RAISE)
-#define THREE MO(LAYER_THREE)
-#define MOUSE MO(_MOUSE)
-
-/*
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    HSV hsv = {0, 255, 255};
-
-	if (layer_state_is(2)) {
-    //if (layer_state_is(layer_state, 2)) {
-        hsv = {130, 255, 255};
-    } else {
-        hsv = {30, 255, 255};
-    }
-
-    if (hsv.v > rgb_matrix_get_val()) {
-        hsv.v = rgb_matrix_get_val();
-    }
-    RGB rgb = hsv_to_rgb(hsv);
-
-    for (uint8_t i = led_min; i < led_max; i++) {
-        if (HAS_FLAGS(g_led_config.flags[i], 0x01)) { // 0x01 == LED_FLAG_MODIFIER
-            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
-        }
-    }
-    return false;
-}
-*/
-
-/*
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    //if (get_highest_layer(layer_state) > 0) {
-        uint8_t layer = get_highest_layer(layer_state);
-		
-		
-        for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
-            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
-                uint8_t index = g_led_config.matrix_co[row][col];
-
-                if (index >= led_min && index < led_max && index != NO_LED &&
-                keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-					HSV hsv = {0, 255, 255};
-					
-					if (layer_state_is(3)) {
-						rgb_matrix_set_color(index, RGB_RED);
-					}
-					else if (layer_state_is(2)) {
-						hsv.h = 130;
-						rgb_matrix_set_color(index, RGB_BLUE);
-					}
-					else if (layer_state_is(1)) {
-						rgb_matrix_set_color(index, RGB_GREEN);
-					}
-					else {
-						//rgb_matrix_set_color(index, RGB_WHITE);
-					}
-					
-					
-				}
-            }
-        }
-    //}
-    return false;
-}
-*/
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     HSV hsv = {0, 255, 255};
@@ -130,16 +68,18 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                 if (index >= led_min && index < led_max && index != NO_LED &&
                 keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
 					if (layer_state_is(3)) {
-						rgb_matrix_set_color(index, RGB_RED);
+						rgb_matrix_set_color(index, RGB_ORANGE);
 						//hsv = (HSV) { (uint8_t)0, (uint8_t)100, (uint8_t)98 };
 						//rgb = hsv_to_rgb(hsv);
 						//rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+						//rgb_matrix_sethsv_noeeprom(0, 100, 98);
 					}
 					else if (layer_state_is(2)) {
 						//hsv = (HSV) { (uint8_t)130, 100, 90 };
 						//rgb = hsv_to_rgb(hsv);
 						//rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
 						rgb_matrix_set_color(index, RGB_BLUE);
+						//rgb_matrix_sethsv_noeeprom(130, 100, 90);
 					}
 					else if (layer_state_is(1)) {
 						//(index, RGB_GREEN);
@@ -147,35 +87,25 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 						//rgb = hsv_to_rgb(hsv);
 						//rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
 						rgb_matrix_set_color(index,  RGB_GREEN);
+						//rgb_matrix_sethsv_noeeprom(50, 100, 80);
 					}
 					else {
 						//rgb_matrix_set_color(index, RGB_WHITE);
-						hsv = (HSV) { (uint8_t)180, 0, 100 };
+						hsv = (HSV) { (uint8_t)127, 0, 80 };
 						rgb = hsv_to_rgb(hsv);
 						rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+						//rgb_matrix_sethsv_noeeprom(180, 0, 100);
 					}
 				}
 				else if (keymap_key_to_keycode(layer, (keypos_t){col,row}) <= KC_TRNS) {
 					hsv = (HSV) { (uint8_t)0, (uint8_t)0, (uint8_t)0 };
 					rgb = hsv_to_rgb(hsv);
 					rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+					//rgb_matrix_sethsv_noeeprom(0, 0, 0);
 				}
             }
-        }
-
-	/*
-    if (hsv.v > rgb_matrix_get_val()) {
-        hsv.v = rgb_matrix_get_val();
-    }
-	*/
-	
-    
-
-    for (uint8_t i = led_min; i < led_max; i++) {
-        if (HAS_FLAGS(g_led_config.flags[i], 0x01)) { // 0x01 == LED_FLAG_MODIFIER
-            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
-        }
-    }
+        }  
+		
     return false;
 }
   
@@ -211,7 +141,7 @@ layer_state_t layer_state_set_user_keymap(layer_state_t state) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_charybdis_4x6(
   // ╭────────────────────────────────────────────────────────────────────────╮ ╭───────────────────────────────────────────────────────────────────────────╮
-        KC_ESC,    KC_1,        KC_2,        KC_3,        KC_4,        KC_5,       KC_6,     KC_7,         KC_8,         KC_9,          KC_0,       KC_MINS,
+       QK_GESC,    KC_1,        KC_2,        KC_3,        KC_4,        KC_5,       KC_6,     KC_7,         KC_8,         KC_9,          KC_0,       KC_MINS,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,   	    KC_W,        KC_E,        KC_R,        KC_T,       KC_Y,     KC_U,         KC_I,         KC_O,          KC_P,       KC_BSLS,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
@@ -243,20 +173,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
         KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MNXT, _______, _______, _______, _______, _______,    KC_BTN1, KC_BTN2, KC_WH_U, KC_WH_D, , KC_VOLU,
+       KC_MNXT, _______, _______, _______, _______, AC_TOGG,    KC_BTN1, KC_BTN2, KC_WH_U, KC_WH_D, _______, KC_VOLU,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_MPLY, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,    KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, _______, KC_MUTE,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MPRV, _______, _______, _______,  EE_CLR, QK_BOOT,    KC_NO,   KC_BTN1, KC_BTN2, KC_BTN3,   MO(2), KC_VOLD,
+       KC_MPRV, _______, _______, _______,  EE_CLR, QK_BOOT,    _______, KC_BTN1, KC_BTN2, KC_BTN3,   MO(2), KC_VOLD,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  _______, _______,   KC_NO,    _______, _______,
+                                  _______, _______, _______,    _______, _______,
                                            _______, _______,    _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
  [_MOUSE] = LAYOUT_charybdis_4x6(
-	_______, _______, _______,  _______, _______, _______,   _______, DPI_RMOD,DPI_MOD,               S_D_RMOD,      S_D_MOD, _______,
-	 KC_TAB, _______, 	 KC_W,  _______, _______,    KC_T,   KC_WH_U, _______, _______,                _______,      KC_BTN3, _______,
-	_______, KC_LGUI, KC_LALT,  KC_LCTL, KC_LSFT, _______,   KC_WH_D, KC_RSFT, KC_RCTL,                KC_RALT,      KC_RGUI, KC_BTN6,
+	_______, _______, _______,  _______, _______, _______,   _______, 	  DPI_RMOD,DPI_MOD,               S_D_RMOD,		        S_D_MOD,	   _______,
+	 KC_TAB, _______, 	 KC_W,  _______, _______,    KC_T,   KC_WH_U, 	  _______, _______,                _______,		        KC_BTN3,	   _______,
+	_______, KC_LGUI, KC_LALT,  KC_LCTL, KC_LSFT, _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,                KC_RALT,		        KC_RGUI,	   KC_BTN6,
 	_______, 	KC_Z,    KC_X, 	   KC_C,    KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE,KC_WWW_FORWARD,
 							    _______, _______, _______,   _______, _______,
 									   _______, _______,    _______

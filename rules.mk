@@ -2,10 +2,13 @@ CUSTOM_UNICODE_ENABLE = no
 CUSTOM_POINTING_DEVICE = no
 CUSTOM_SPLIT_TRANSPORT_SYNC = no
 MOUSEKEY_ENABLE = yes
+CAPS_WORD_ENABLE = yes
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = WS2812
+AUTOCORRECT_ENABLE = yes
 
 SRC += features/achordion.c
+#SRC += features/autocorrection.c
 
 ifeq ($(strip $(KEYBOARD)), bastardkb/charybdis/4x6/blackpill)
     # MCU name
