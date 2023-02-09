@@ -17,6 +17,10 @@
 #include QMK_KEYBOARD_H
 #include "features/achordion.h"
 
+#ifdef RGB_MATRIX_ENABLE
+#include "quantum/rgb_matrix/rgb_matrix.h"
+#endif  // RGB_MATRIX_ENABLE
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
   // Your macros ...
@@ -40,11 +44,151 @@ void matrix_scan_user(void) {
   achordion_task();
 }
 
+uint16_t achordion_timeout(uint16_t tap_hold_keycode)
+{
+	return 500;
+}
+ 
+
+
 #define LOWER MO(LAYER_LOWER)
 #define RAISE MO(LAYER_RAISE)
 #define THREE MO(LAYER_THREE)
 #define MOUSE MO(_MOUSE)
-    
+
+/*
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    HSV hsv = {0, 255, 255};
+
+	if (layer_state_is(2)) {
+    //if (layer_state_is(layer_state, 2)) {
+        hsv = {130, 255, 255};
+    } else {
+        hsv = {30, 255, 255};
+    }
+
+    if (hsv.v > rgb_matrix_get_val()) {
+        hsv.v = rgb_matrix_get_val();
+    }
+    RGB rgb = hsv_to_rgb(hsv);
+
+    for (uint8_t i = led_min; i < led_max; i++) {
+        if (HAS_FLAGS(g_led_config.flags[i], 0x01)) { // 0x01 == LED_FLAG_MODIFIER
+            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+        }
+    }
+    return false;
+}
+*/
+
+/*
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    //if (get_highest_layer(layer_state) > 0) {
+        uint8_t layer = get_highest_layer(layer_state);
+		
+		
+        for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+                uint8_t index = g_led_config.matrix_co[row][col];
+
+                if (index >= led_min && index < led_max && index != NO_LED &&
+                keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+					HSV hsv = {0, 255, 255};
+					
+					if (layer_state_is(3)) {
+						rgb_matrix_set_color(index, RGB_RED);
+					}
+					else if (layer_state_is(2)) {
+						hsv.h = 130;
+						rgb_matrix_set_color(index, RGB_BLUE);
+					}
+					else if (layer_state_is(1)) {
+						rgb_matrix_set_color(index, RGB_GREEN);
+					}
+					else {
+						//rgb_matrix_set_color(index, RGB_WHITE);
+					}
+					
+					
+				}
+            }
+        }
+    //}
+    return false;
+}
+*/
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    HSV hsv = {0, 255, 255};
+	uint8_t layer = get_highest_layer(layer_state);
+
+	for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+                uint8_t index = g_led_config.matrix_co[row][col];
+
+                if (index >= led_min && index < led_max && index != NO_LED &&
+                keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+					
+					if (layer_state_is(3)) {
+						//rgb_matrix_set_color(index, RGB_RED);
+					}
+					else if (layer_state_is(2)) {
+						hsv.h = 130;
+						//rgb_matrix_set_color(index, RGB_BLUE);
+					}
+					else if (layer_state_is(1)) {
+						//(index, RGB_GREEN);
+					}
+					else {
+						//rgb_matrix_set_color(index, RGB_WHITE);
+					}
+					
+					
+				}
+            }
+        }
+
+    if (hsv.v > rgb_matrix_get_val()) {
+        hsv.v = rgb_matrix_get_val();
+    }
+    RGB rgb = hsv_to_rgb(hsv);
+
+    for (uint8_t i = led_min; i < led_max; i++) {
+        if (HAS_FLAGS(g_led_config.flags[i], 0x01)) { // 0x01 == LED_FLAG_MODIFIER
+            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+        }
+    }
+    return false;
+}
+  
+
+/*
+layer_state_t layer_state_set_user_keymap(layer_state_t state) {
+  state = update_tri_layer_state(state, LAYER_LOWER, _MOUSE, LAYER_BASE);
+  #ifdef RGB_MATRIX_ENABLE
+    switch (get_highest_layer(state | default_layer_state)) {
+      case LAYER_LOWER:
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
+        rgb_matrix_sethsv_noeeprom(HSV_RED);
+        break;
+      case _MOUSE:
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
+        rgb_matrix_sethsv_noeeprom(HSV_BLUE);
+        break;
+      case LAYER_BASE:
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
+        rgb_matrix_sethsv_noeeprom(HSV_WHITE);
+        break;
+
+      default: //  for any other layers, or the default layer
+        rgb_matrix_reload_from_eeprom();  // Load default values.
+        break;
+    }
+    #endif // RGB_MATRIX_ENABLE
+  return state;
+}
+*/
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_charybdis_4x6(
@@ -53,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,   	    KC_W,        KC_E,        KC_R,        KC_T,       KC_Y,     KC_U,         KC_I,         KC_O,          KC_P,       KC_BSLS,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
-       KC_EQL, LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F),   KC_G,       KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,
+       KC_EQL, LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,       KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
        KC_LBRC,    KC_Z,        KC_X,        KC_C,        KC_V,        KC_B,       KC_N,     KC_M,        KC_COMM,      KC_DOT,     KC_SLSH,  KC_RBRC,
   // ╰────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────╯
@@ -92,12 +236,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
  [_MOUSE] = LAYOUT_charybdis_4x6(
-	_______, _______, _______, _______, _______, _______,   _______, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, _______,
-	_______, _______, _______, _______, _______, _______,   KC_WH_U, _______, _______, _______, _______, DRAGSCROLL_MODE,
-	_______, _______, _______, _______, _______, _______,   KC_WH_D, KC_BTN4, KC_BTN8, KC_BTN5, KC_BTN6, SNIPING,
-	_______, _______, _______, _______, _______, _______,   KC_WH_D, KC_BTN1, KC_BTN2, KC_BTN3, KC_WH_U, _______,
-							   _______, _______, _______,   _______, _______,
-									   _______, _______,     _______
+	_______, _______, _______,  _______, _______, _______,   _______, DPI_RMOD,DPI_MOD,               S_D_RMOD,      S_D_MOD, _______,
+	 KC_TAB, _______, 	 KC_W,  _______, _______,    KC_T,   KC_WH_U, _______, _______,                _______,      KC_BTN3, _______,
+	_______, KC_LGUI, KC_LALT,  KC_LCTL, KC_LSFT, _______,   KC_WH_D, KC_RSFT, KC_RCTL,                KC_RALT,      KC_RGUI, KC_BTN6,
+	_______, 	KC_Z,    KC_X, 	   KC_C,    KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE,KC_WWW_FORWARD,
+							    _______, _______, _______,   _______, _______,
+									   _______, _______,    _______
 ),
 
 /*
