@@ -45,6 +45,22 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
+// Auto mouse layer
+bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
+    switch(keycode) {
+		case KC_WWW_BACK:
+		case KC_WWW_FORWARD:
+        case KC_BTN1: 
+        case KC_BTN2:  
+        case DRAGSCROLL_MODE_TOGGLE:
+		case SNIPING_MODE_TOGGLE:
+            return true;
+        default:
+            return false;
+    }
+    return  false;
+}
+
 void matrix_scan_user(void) {
   achordion_task();
 }
@@ -105,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
        KC_EQL, LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,       KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
-       KC_LBRC,    KC_Z,        KC_X,        KC_C,        KC_V,        KC_B,       KC_N,     KC_M,        KC_COMM,      KC_DOT,     KC_SLSH,  KC_RBRC,
+       KC_LBRC,    KC_Z,        KC_X,        KC_C,        KC_V,        KC_B,       KC_N,     KC_M,        KC_COMM,      KC_DOT,         KC_SLSH,    KC_RBRC,
   // ╰────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────╯
 												     KC_DEL, KC_BSPC,   MO(1),      KC_ENT,  KC_SPC,
 													  	     KC_HOME,  KC_END,      MO(2)
@@ -144,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  [_MOUSE] = LAYOUT_charybdis_4x6(
 	_______, _______, _______,  _______, 	  _______, _______,   _______, 	  DPI_RMOD,DPI_MOD,               S_D_RMOD,		        S_D_MOD,	     _______,
 	 KC_TAB, _______, 	 KC_W,  _______, 	  _______,    KC_T,   KC_WH_U, 	  _______, _______,                _______,		        KC_BTN3,	     _______,
-	_______, KC_LGUI, KC_LALT,  KC_LCTL, LSFT_T(KC_F), _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,    SNIPING_MODE_TOGGLE,		        KC_RGUI,	     KC_BTN6,
+	_______, KC_LGUI, KC_LALT,  KC_LCTL, LSFT_T(KC_F), _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,    			   _______,		        KC_RGUI,	     KC_BTN6,
 	_______, 	KC_Z,    KC_X, 	   KC_C, 	     KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE, KC_WWW_FORWARD,
 									 _______, _______, _______,   _______, _______,
 											  _______, _______,   _______
