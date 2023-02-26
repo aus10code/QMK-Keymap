@@ -22,16 +22,16 @@
 #endif  // RGB_MATRIX_ENABLE
 
 enum charybdis_keymap_layers {
-    LAYER_BASE = 0,
-    LAYER_LOWER,
-    LAYER_RAISE,
-	_MOUSE,
+    LAYER_ZERO = 0,
+	LAYER_MOUSE,
+    LAYER_ONE,
+    LAYER_TWO,
 };
 
-#define LOWER MO(LAYER_LOWER)
-#define RAISE MO(LAYER_RAISE)
+#define LOWER MO(LAYER_ONE)
+#define RAISE MO(LAYER_TWO)
 #define THREE MO(LAYER_THREE)
-#define MOUSE MO(_MOUSE)
+#define MOUSE MO(LAYER_MOUSE)
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
@@ -84,13 +84,13 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                 if (index >= led_min && index < led_max && index != NO_LED &&
                 keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
 					if (layer_state_is(3)) {
-						hsv = (HSV) { (uint8_t)29, 255, 150 }; // Orange
-					}
-					else if (layer_state_is(2)) {
 						hsv = (HSV) { (uint8_t)167, 255, 180 }; // Blue
 					}
-					else if (layer_state_is(1)) {
+					else if (layer_state_is(2)) {
 						hsv = (HSV) { (uint8_t)90, 255, 180 }; // Graeenm
+					}
+					else if (layer_state_is(1)) {
+						hsv = (HSV) { (uint8_t)29, 255, 150 }; // Orange
 					}
 					else {
 						hsv = (HSV) { (uint8_t)127, 0, 100 }; // White
@@ -113,7 +113,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
   
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [LAYER_BASE] = LAYOUT_charybdis_4x6(
+  [LAYER_ZERO] = LAYOUT_charybdis_4x6(
   // ╭────────────────────────────────────────────────────────────────────────╮ ╭───────────────────────────────────────────────────────────────────────────╮
        QK_GESC,    KC_1,        KC_2,        KC_3,        KC_4,        KC_5,       KC_6,     KC_7,         KC_8,         KC_9,          KC_0,       KC_MINS,
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
@@ -123,12 +123,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────┤
        KC_LBRC,    KC_Z,        KC_X,        KC_C,        KC_V,        KC_B,       KC_N,     KC_M,        KC_COMM,      KC_DOT,         KC_SLSH,    KC_RBRC,
   // ╰────────────────────────────────────────────────────────────────────────┤ ├───────────────────────────────────────────────────────────────────────────╯
-												     KC_DEL, KC_BSPC,   MO(1),      KC_ENT,  KC_SPC,
-													  	     KC_HOME,  KC_END,      MO(2)
+												     KC_DEL, KC_BSPC,   MO(2),      KC_ENT,  KC_SPC,
+													  	     KC_HOME,  KC_END,      MO(3)
 				  //                              ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_LOWER] = LAYOUT_charybdis_4x6(
+  [LAYER_ONE] = LAYOUT_charybdis_4x6(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -143,7 +143,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_RAISE] = LAYOUT_charybdis_4x6(
+  [LAYER_TWO] = LAYOUT_charybdis_4x6(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
         KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -157,13 +157,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            _______, _______,    _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
- [_MOUSE] = LAYOUT_charybdis_4x6(
+ [LAYER_MOUSE] = LAYOUT_charybdis_4x6(
 	_______, _______, _______,  _______, 	  _______, _______,   _______, 	  DPI_RMOD,DPI_MOD,               S_D_RMOD,		        S_D_MOD,	     _______,
 	 KC_TAB, _______, 	 KC_W,  _______, 	  _______,    KC_T,   KC_WH_U, 	  _______, _______,                _______,		        KC_BTN3,	     _______,
 	_______, KC_LGUI, KC_LALT,  KC_LCTL, LSFT_T(KC_F), _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,    			   _______,		        KC_RGUI,	     KC_BTN6,
 	_______, 	KC_Z,    KC_X, 	   KC_C, 	     KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE, KC_WWW_FORWARD,
-									 _______, _______, _______,   _______, _______,
-											  _______, _______,   _______
+									 _______, _______,  MO(2) ,   _______, _______,
+											  _______, _______,    MO(3)
 ),
 
 /*
