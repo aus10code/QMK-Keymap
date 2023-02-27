@@ -24,14 +24,9 @@
 enum charybdis_keymap_layers {
     LAYER_ZERO = 0,
 	LAYER_MOUSE,
-    LAYER_ONE,
     LAYER_TWO,
+    LAYER_THREE,
 };
-
-#define LOWER MO(LAYER_ONE)
-#define RAISE MO(LAYER_TWO)
-#define THREE MO(LAYER_THREE)
-#define MOUSE MO(LAYER_MOUSE)
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
@@ -128,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 				  //                              ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_ONE] = LAYOUT_charybdis_4x6(
+  [LAYER_TWO] = LAYOUT_charybdis_4x6(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -143,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_TWO] = LAYOUT_charybdis_4x6(
+  [LAYER_THREE] = LAYOUT_charybdis_4x6(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
         KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -158,12 +153,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
  [LAYER_MOUSE] = LAYOUT_charybdis_4x6(
-	_______, _______, _______,  _______, 	  _______, _______,   _______, 	  DPI_RMOD,DPI_MOD,               S_D_RMOD,		        S_D_MOD,	     _______,
-	 KC_TAB, _______, 	 KC_W,  _______, 	  _______,    KC_T,   KC_WH_U, 	  _______, _______,                _______,		        KC_BTN3,	     _______,
-	_______, KC_LGUI, KC_LALT,  KC_LCTL, LSFT_T(KC_F), _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,    			   _______,		        KC_RGUI,	     KC_BTN6,
-	_______, 	KC_Z,    KC_X, 	   KC_C, 	     KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE, KC_WWW_FORWARD,
-									 _______, _______,  MO(2) ,   _______, _______,
-											  _______, _______,    MO(3)
+	_______,   _______   ,      _______,      _______,      _______, _______,   _______, 	  DPI_RMOD,DPI_MOD,               S_D_RMOD,		        S_D_MOD,	     _______,
+	 KC_TAB,   _______   , 	       KC_W,      _______,      _______,    KC_T,   KC_WH_U, 	  _______, _______,                _______,		        KC_BTN3,	     _______,
+	_______, LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), _______,   KC_WH_D, 	  KC_RSFT, KC_RCTL,    			   _______,		        KC_RGUI,	     KC_BTN6,
+	_______, 	     KC_Z,         KC_X, 	     KC_C, 	       KC_V, _______,   KC_WWW_BACK, KC_BTN1, KC_BTN2, DRAGSCROLL_MODE_TOGGLE, SNIPING_MODE_TOGGLE, KC_WWW_FORWARD,
+												   _______, _______,  MO(2) ,   _______, _______,
+															_______, _______,     MO(3)
 ),
 
 /*
