@@ -82,7 +82,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 						hsv = (HSV) { (uint8_t)167, 255, 180 }; // Blue
 					}
 					else if (layer_state_is(2)) {
-						hsv = (HSV) { (uint8_t)90, 255, 180 }; // Graeenm
+						hsv = (HSV) { (uint8_t)90, 255, 180 }; // Green
 					}
 					else if (layer_state_is(1)) {
 						hsv = (HSV) { (uint8_t)29, 255, 150 }; // Orange
