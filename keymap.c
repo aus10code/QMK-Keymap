@@ -28,9 +28,11 @@ enum charybdis_keymap_layers {
     LAYER_THREE,
 };
 
+// Logging for testing mouse layer stick
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
   // Your macros ...
+
 
   return true;
 }
@@ -39,6 +41,7 @@ void pointing_device_init_user(void) {
     //set_auto_mouse_layer(<mouse_layer>); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
+
 
 // Auto mouse layer
 bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
@@ -62,6 +65,9 @@ void matrix_scan_user(void) {
 
 uint16_t achordion_timeout(uint16_t tap_hold_keycode)
 {
+	if (IS_LAYER_ON(LAYER_MOUSE)) { 
+		return 0;  // Bypass Achordion while mouse layer is on.
+	}
 	return 500;
 }
  
